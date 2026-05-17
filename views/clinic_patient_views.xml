@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- First Tree View -->
+<record id="view_clinic_patient_tree_simple" model="ir.ui.view">
+    <field name="name">clinic.patient.tree.simple</field>
+    <field name="model">clinic.patient</field>
+    <field name="priority" eval="10"/>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="phone"/>
+        </tree>
+    </field>
+</record>
+
+<!-- Second Tree View -->
+<record id="view_clinic_patient_tree_detailed" model="ir.ui.view">
+    <field name="name">clinic.patient.tree.detailed</field>
+    <field name="model">clinic.patient</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="name"/>
+            <field name="age"/>
+            <field name="gender"/>
+            <field name="address"/>
+        </tree>
+    </field>
+</record>
+
+
+    <record id="view_clinic_patient_form" model="ir.ui.view">
+        <field name="name">clinic.patient.form</field>
+        <field name="model">clinic.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="new,active,discharged"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Personal Info">
+                            <field name="name"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                        </group>
+                        <group string="Contact Info">
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_clinic_patient_search" model="ir.ui.view">
+        <field name="name">clinic.patient.search</field>
+        <field name="model">clinic.patient</field>
+        <field name="arch" type="xml">
+            <search string="Search Patients">
+                <field name="name"/>
+                <filter string="Male" name="filter_male" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="filter_female" domain="[('gender', '=', 'female')]"/>
+                <filter string="Other" name="filter_other" domain="[('gender', '=', 'other')]"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('state', '=', 'active')]"/>
+                <filter string="Discharged" name="filter_discharged" domain="[('state', '=', 'discharged')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Gender" name="group_by_gender" context="{'group_by':'gender'}"/>
+                    <filter string="State" name="group_by_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_clinic_patient_simple" model="ir.actions.act_window">
+        <field name="name">Patients (Simple)</field>
+        <field name="res_model">clinic.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_clinic_patient_tree_simple"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new patient
+            </p>
+        </field>
+    </record>
+
+    <record id="action_clinic_patient_detailed" model="ir.actions.act_window">
+        <field name="name">Patients (Detailed)</field>
+        <field name="res_model">clinic.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_clinic_patient_tree_detailed"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new patient
+            </p>
+        </field>
+    </record>
+
+    <!-- Top Menu Item -->
+    <menuitem id="menu_clinic_root" name="Clinic Management" sequence="10"/>
+    
+    <!-- Action Menu Items -->
+    <menuitem id="menu_clinic_patient_simple" name="Simple Patients" parent="menu_clinic_root" action="action_clinic_patient_simple" sequence="10"/>
+    <menuitem id="menu_clinic_patient_detailed" name="Detailed Patients" parent="menu_clinic_root" action="action_clinic_patient_detailed" sequence="20"/>
+</odoo>

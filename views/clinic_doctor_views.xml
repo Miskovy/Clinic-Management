@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_clinic_doctor_tree" model="ir.ui.view">
+        <field name="name">clinic.doctor.tree</field>
+        <field name="model">clinic.doctor</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="specialization"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_clinic_doctor_form" model="ir.ui.view">
+        <field name="name">clinic.doctor.form</field>
+        <field name="model">clinic.doctor</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-users" type="object" name="action_view_patients">
+                            <field name="appointment_count" string="Patients" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="specialization"/>
+                        <field name="phone"/>
+                        <field name="email"/>
+                        <field name="active"/>
+                    </group>
+                    <notebook>
+                        <page string="Patients">
+                            <field name="patient_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="age"/>
+                                    <field name="gender"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_clinic_doctor_search" model="ir.ui.view">
+        <field name="name">clinic.doctor.search</field>
+        <field name="model">clinic.doctor</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="specialization"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="active"/>
+            </search>
+        </field>
+    </record>
+
+    
+    <record id="action_clinic_doctor" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="res_model">clinic.doctor</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_clinic_doctor" name="Doctors" parent="menu_clinic_root" action="action_clinic_doctor" sequence="20"/>
+</odoo>
