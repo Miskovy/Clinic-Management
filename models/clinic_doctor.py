@@ -22,6 +22,7 @@ class ClinicDoctor(models.Model):
 
     phone = fields.Char(string="Contact Phone Number")
     email = fields.Char(string="Email Address")
+    user_id = fields.Many2one("res.users", string="Related User")
     active = fields.Boolean(string="Active", default=True)
     patient_ids = fields.One2many("clinic.patient", "doctor_id", string="Patients")
     appointment_count = fields.Integer(string="Number of Appointments", compute="_compute_appointment_count", store=True)

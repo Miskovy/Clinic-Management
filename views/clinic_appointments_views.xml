@@ -7,12 +7,46 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="patient "/>
-                <field name="phone"/>
-                <field name="email"/>
-                <field name="active"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="appointment_date"/>
+                <field name="reason"/>
+                <field name="diagnosis" groups="clinic_management.group_clinic_doctor"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
 
+    <record id="view_clinic_appointment_form" model="ir.ui.view">
+        <field name="name">clinic.appointment.form</field>
+        <field name="model">clinic.appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" type="object" string="Mark as Done" class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" type="object" string="Cancel" groups="clinic_management.group_clinic_doctor"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done,cancelled" readonly="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="patient_id" string="Patient"/>
+                        <field name="doctor_id" string="Doctor"/>
+                        <field name="appointment_date" string="Appointment Date"/>
+                        <field name="reason"/>
+                        <field name="diagnosis" groups="clinic_management.group_clinic_doctor"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_clinic_appointments" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="res_model">clinic.appointment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<menuitem id="menu_clinic_appointments" name="Appointments" parent="menu_clinic_root" action="action_clinic_appointments" sequence="20"/>
 </odoo>

@@ -15,8 +15,8 @@ class ClinicAppointment(models.Model):
     state = fields.Selection([
         ("draft", "Draft"),
         ("confirmed", "Confirmed"),
-        ("cancelled", "Cancelled"),
         ("done", "Done"),
+        ("cancelled", "Cancelled"),
     ], string="State", default="draft")
 
     @api.onchange('doctor_id')
@@ -45,10 +45,13 @@ class ClinicAppointment(models.Model):
                     )
 
     def action_confirm(self):
-        self.state = "confirmed"
+        for record in self:
+            record.state = "confirmed"
 
     def action_cancel(self):
-        self.state = "cancelled"
+        for record in self:
+            record.state = "cancelled"
 
     def action_done(self):
-        self.state = "done"
+        for record in self:
+            record.state = "done"

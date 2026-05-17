@@ -7,6 +7,7 @@
             <tree>
                 <field name="name"/>
                 <field name="specialization"/>
+                <field name="user_id"/>
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="active"/>
@@ -28,6 +29,7 @@
                     <group>
                         <field name="name"/>
                         <field name="specialization"/>
+                        <field name="user_id"/>
                         <field name="phone"/>
                         <field name="email"/>
                         <field name="active"/>
@@ -56,6 +58,7 @@
             <search>
                 <field name="name"/>
                 <field name="specialization"/>
+                <field name="user_id"/>
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="active"/>

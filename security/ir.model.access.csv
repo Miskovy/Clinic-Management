@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_clinic_patient,clinic_management.clinic_patient,model_clinic_patient,base.group_user,1,1,1,1
 access_clinic_doctor,clinic_management.clinic_doctor,model_clinic_doctor,base.group_user,1,1,1,1
-access_clinic_appointment,clinic_management.clinic_appointments,model_clinic_appointments,base.group_user,1,1,1,1
+access_clinic_appointments,clinic_management.clinic_appointments,model_clinic_appointment,base.group_user,1,1,1,1

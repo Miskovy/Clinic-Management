@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_clinic_doctor" model="res.groups">
+        <field name="name">Clinic Doctor</field>
+    </record>
+
+    <record id="rule_clinic_appointment_doctor_own" model="ir.rule">
+        <field name="name">Doctors can only see their appointments</field>
+        <field name="model_id" ref="model_clinic_appointment"/>
+        <field name="domain_force">[('doctor_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('clinic_management.group_clinic_doctor'))]"/>
+    </record>
+</odoo>
