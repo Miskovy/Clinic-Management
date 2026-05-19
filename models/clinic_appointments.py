@@ -18,6 +18,7 @@ class ClinicAppointment(models.Model):
         ("done", "Done"),
         ("cancelled", "Cancelled"),
     ], string="State", default="draft")
+    prescription_ids = fields.One2many("clinic.prescription", "appointment_id", string="Prescriptions")
 
     @api.onchange('doctor_id')
     def _onchange_doctor_id(self):

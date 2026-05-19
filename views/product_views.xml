@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_template_form_inherit_clinic_management" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.clinic.management</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="is_medicine"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="menu_clinic_products" name="Medicines" parent="menu_clinic_root" action="product.product_template_action" sequence="40"/>
+</odoo>
