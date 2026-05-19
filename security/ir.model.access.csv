@@ -3,3 +3,4 @@ access_clinic_patient,clinic_management.clinic_patient,model_clinic_patient,base
 access_clinic_doctor,clinic_management.clinic_doctor,model_clinic_doctor,base.group_user,1,1,1,1
 access_clinic_appointments,clinic_management.clinic_appointments,model_clinic_appointment,base.group_user,1,1,1,1
 access_clinic_prescription,clinic_management.clinic_prescription,model_clinic_prescription,base.group_user,1,1,1,1
+access_clinic_reschedule_wizard,clinic.reschedule.wizard.access,model_clinic_reschedule_wizard,base.group_user,1,1,1,1

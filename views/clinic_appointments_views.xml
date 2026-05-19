@@ -25,6 +25,13 @@
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_done" type="object" string="Mark as Done" class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="%(action_clinic_reschedule_wizard)d"
+                            type="action"
+                            string="Reschedule"
+                            class="btn-secondary"
+                            invisible="state != 'confirmed'"
+                            context="{'default_appointment_id': id, 'default_new_date': appointment_date, 'default_new_doctor_id': doctor_id}"
+                    />
                     <button name="action_cancel" type="object" string="Cancel" groups="clinic_management.group_clinic_doctor"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done,cancelled" readonly="1"/>
                 </header>
@@ -50,6 +57,11 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>

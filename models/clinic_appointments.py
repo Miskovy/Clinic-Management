@@ -4,6 +4,7 @@ from odoo import models, fields, api, exceptions
 class ClinicAppointment(models.Model):
     _name = "clinic.appointment"
     _description = "Clinic Appointment"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _rec_name = "name"
 
     name = fields.Char(string="Name", required=True)

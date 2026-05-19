@@ -5,7 +5,7 @@
     'description': """CLinic Management Addon""",
     'author': "Mazen Khairy",
     'version': '0.1',
-    'depends': ['base', 'product'],
+    'depends': ['base', 'product', 'mail'],
     'category': 'Hospital',
     'data': [
         'security/clinic_security.xml',
@@ -14,6 +14,7 @@
         'views/templates.xml',
         'views/clinic_patient_views.xml',
         'views/clinic_doctor_views.xml',
+        'wizards/reschedule_wizard_views.xml',
         'views/clinic_appointments_views.xml',
         'views/product_views.xml',
         'data/product_data.xml',
