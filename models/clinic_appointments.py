@@ -1,5 +1,5 @@
 from odoo import models, fields, api, exceptions
-
+from datetime import datetime,timedelta
 
 class ClinicAppointment(models.Model):
     _name = "clinic.appointment"
@@ -20,6 +20,31 @@ class ClinicAppointment(models.Model):
         ("cancelled", "Cancelled"),
     ], string="State", default="draft")
     prescription_ids = fields.One2many("clinic.prescription", "appointment_id", string="Prescriptions")
+    calendar_label = fields.Char(
+        string="Calendar Title",
+        compute="_compute_calendar_label"
+    )
+
+    @api.model
+    def auto_cancel_unconfirmed(self):
+        threshold_date = datetime.now() - timedelta(days=1)
+
+        unconfirmed_appointments = self.search([
+            ('state', '=', 'draft'),
+            ('appointment_date', '<', threshold_date)
+        ])
+
+        if unconfirmed_appointments:
+            unconfirmed_appointments.write({'state': 'cancel'})
+
+
+    @api.depends('patient_id','doctor_id')
+    def _compute_calendar_label(self):
+        for record in self:
+            patient = record.patient_id.name if record.patient_id else "Unknown Patient"
+            doctor = record.doctor_id.name if record.doctor_id else "Unknown Doctor"
+            record.calendar_label = f"{patient} - {doctor}"
+
 
     @api.onchange('doctor_id')
     def _onchange_doctor_id(self):

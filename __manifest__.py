@@ -17,7 +17,9 @@
         'wizards/reschedule_wizard_views.xml',
         'views/clinic_appointments_views.xml',
         'views/product_views.xml',
+        'reports/appointments_report.xml',
         'data/product_data.xml',
+        'data/cron_jobs.xml',
     ],
     'demo': [
         'demo/demo.xml',

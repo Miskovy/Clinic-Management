@@ -66,11 +66,133 @@
         </field>
     </record>
 
+
+    <!-- Kanban View -->
+    <record id="view_clinic_appointment_kanban" model="ir.ui.view">
+        <field name="name">clinic.appointment.kanban</field>
+        <field name="model">clinic.appointment</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="appointment_date"/>
+                <field name="state"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click oe_kanban_card p-3 mb-2 shadow-sm rounded">
+                            <div class="oe_kanban_content">
+
+                                <!-- Patient Name in Bold -->
+                                <div class="mb-1">
+                                    <strong class="fs-5 text-dark">
+                                        <field name="patient_id"/>
+                                    </strong>
+                                </div>
+
+                                <!-- Doctor Name -->
+                                <div class="text-muted small mb-1">
+                                    <i class="fa fa-user-md me-1"/>
+                                    <field name="doctor_id"/>
+                                </div>
+
+                                <!-- Appointment Date -->
+                                <div class="text-muted small mb-3">
+                                    <i class="fa fa-calendar me-1"/>
+                                    <field name="appointment_date"/>
+                                </div>
+
+                                <!-- State Dynamic Badge Layout -->
+                                <div class="oe_kanban_footer border-top pt-2">
+                                    <span t-attf-class="badge rounded-pill #{
+                                        record.state.raw_value == 'done' ? 'text-bg-success' :
+                                        record.state.raw_value == 'confirmed' ? 'text-bg-primary' : 'text-bg-secondary'}">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="view_clinic_appointment_calendar" model="ir.ui.view">
+        <field name="name">clinic.appointment.calendar</field>
+        <field name="model">clinic.appointment</field>
+        <field name="arch" type="xml">
+            <!--
+                date_start: Maps the event placement to your date field
+                name: Forces the layout engine to use our custom computed string
+                color: Activates different colors based on the selected doctor
+                quick_create: Prevents creating a quick record when clicking an empty hour slot
+            -->
+            <calendar string="Appointments"
+                      date_start="appointment_date"
+                      color="doctor_id"
+                      quick_create="false"
+                      mode="week">
+
+                <field name="calendar_label"/>
+                <field name="patient_id"/>
+                <field name="doctor_id" filters="1"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <record id="view_clinic_appointment_graph" model="ir.ui.view">
+        <field name="name">clinic.appointment.graph</field>
+        <field name="model">clinic.appointment</field>
+        <field name="arch" type="xml">
+            <!-- type="bar" sets the default chart type. You can also use "line" or "pie" -->
+            <graph string="Appointments Analysis" type="bar" sample="1">
+                <!-- Grouping fields: The order matters! -->
+                <!-- 1st field becomes the X-axis (Months) -->
+                <field name="appointment_date" interval="month"/>
+                <!-- 2nd field splits the bars by Doctor (Colors/Legend) -->
+                <field name="doctor_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_clinic_appointment_pivot" model="ir.ui.view">
+        <field name="name">clinic.appointment.pivot</field>
+        <field name="model">clinic.appointment</field>
+        <field name="arch" type="xml">
+            <!-- sample="1" loads dummy data if the database has no records yet -->
+            <pivot string="Appointments Analysis" sample="1">
+                <!-- type="row" stacks the doctors vertically on the left -->
+                <field name="doctor_id" type="row"/>
+                <!-- type="col" spreads the workflow states horizontally across the top -->
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="action_clinic_appointments" model="ir.actions.act_window">
         <field name="name">Appointments</field>
         <field name="res_model">clinic.appointment</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
+        <field name="context">{'group_by': 'state'}</field>
     </record>
 
+    <record id="action_clinic_overview" model="ir.actions.act_window">
+        <field name="name">Overview</field>
+        <field name="res_model">clinic.appointment</field>
+        <field name="view_mode">graph,pivot,tree,kanban,form,calendar</field>
+    </record>
+
+    <menuitem id="menu_clinic_overview"
+              name="Overview"
+              parent="menu_clinic_root"
+              action="action_clinic_overview"
+              sequence="10"/>
+
 <menuitem id="menu_clinic_appointments" name="Appointments" parent="menu_clinic_root" action="action_clinic_appointments" sequence="20"/>
+
 </odoo>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_appointment" model="ir.actions.report">
+        <field name="name">Appointment Report</field>
+        <field name="model">clinic.appointment</field>
+        <field name="report_type">qweb-pdf</field>
+
+        <!-- ModuleName.QWEBTemp -->
+        <field name="report_name">clinic_management.report_appointment_template</field>
+
+        <!-- Optional: This adds the report to the "Print" menu on the clinic.appointment form/list views -->
+        <field name="binding_model_id" ref="model_clinic_appointment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="view_clinic_appointment_form_inherit" model="ir.ui.view">
+        <field name="name">clinic.appointment.form.inherit</field>
+        <field name="model">clinic.appointment</field>
+        <field name="inherit_id" ref="clinic_management.view_clinic_appointment_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                <button name="%(clinic_management.action_report_appointment)d"
+                        string="Print Report"
+                        type="action"
+                        class="oe_highlight"
+                        invisible="state not in ['confirmed', 'done']"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- QWEB TEMP -->
+<template id="report_appointment_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+
+                    <!-- Page Container -->
+                    <div class="page">
+                        <div class="oe_structure"/>
+
+                        <!-- 1. HEADER SECTION -->
+                        <div class="row border-bottom pb-3 mb-4">
+                            <div class="col-6">
+                                <!-- Renders the current company/clinic name natively -->
+                                <h3 class="text-primary"><span t-field="res_company.name"/></h3>
+                            </div>
+                            <div class="col-6 text-right" style="text-align: right;">
+                                <h5>Appointment Details</h5>
+                                <strong>Reference:</strong> <span t-field="doc.name"/><br/>
+                                <strong>Date:</strong> <span t-field="doc.appointment_date" t-options='{"widget": "datetime"}'/>
+                            </div>
+                        </div>
+
+                        <!-- 2. PATIENT INFO -->
+                        <h4 class="text-secondary mb-2">Patient Information</h4>
+                        <table class="table table-sm table-borderless mb-4" style="background-color: #f8f9fa; padding: 10px; border-radius: 5px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 15%;"><strong>Name:</strong></td>
+                                    <td style="width: 35%;"><span t-field="doc.patient_id.name"/></td>
+                                    <td style="width: 15%;"><strong>Age:</strong></td>
+                                    <td style="width: 35%;"><span t-field="doc.patient_id.age"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gender:</strong></td>
+                                    <td><span t-field="doc.patient_id.gender"/></td>
+                                    <td><strong>Phone:</strong></td>
+                                    <td><span t-field="doc.patient_id.phone"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 3. DOCTOR INFO -->
+                        <h4 class="text-secondary mb-2">Attending Doctor</h4>
+                        <table class="table table-sm table-borderless mb-4" style="background-color: #f8f9fa; padding: 10px; border-radius: 5px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 15%;"><strong>Doctor:</strong></td>
+                                    <td style="width: 35%;"><span t-field="doc.doctor_id.name"/></td>
+                                    <td style="width: 15%;"><strong>Specialization:</strong></td>
+                                    <td style="width: 35%;"><span t-field="doc.doctor_id.specialization"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- 4. DIAGNOSIS SECTION (with N/A fallback) -->
+                        <h4 class="text-secondary mb-2">Diagnosis</h4>
+                        <div class="border rounded p-3 mb-4" style="min-height: 60px; background-color: #ffffff;">
+                            <t t-if="doc.diagnosis">
+                                <span t-field="doc.diagnosis"/>
+                            </t>
+                            <t t-else="">
+                                <span class="text-muted">N/A</span>
+                            </t>
+                        </div>
+
+                        <!-- 5. PRESCRIPTIONS TABLE -->
+                        <h4 class="text-secondary mb-2">Prescriptions</h4>
+                        <table class="table table-sm table-striped border">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th>Medicine Name</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th>Dose</th>
+                                    <th class="text-center">Duration (Days)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loops through the prescription line One2many field -->
+                                <t t-if="doc.prescription_ids">
+                                    <tr t-foreach="doc.prescription_ids" t-as="line">
+                                        <td><span t-field="line.medicine_id.name"/></td>
+                                        <td class="text-center"><span t-field="line.quantity"/></td>
+                                        <td><span t-field="line.dose"/></td>
+                                        <td class="text-center"><span t-field="line.duration_days"/></td>
+                                    </tr>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No medications prescribed.</td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="oe_structure"/>
+                    </div>
+
+                    <!-- 6. FOOTER WITH PAGE NUMBER -->
+                    <!-- Note: web.external_layout includes a default footer, but this block explicitly overrides/defines dynamic pagination styling -->
+                    <div class="footer o_standard_footer border-top pt-2">
+                        <div class="text-right text-muted small" style="text-align: right;">
+                            Page <span class="page"/> of <span class="topage"/>
+                        </div>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
