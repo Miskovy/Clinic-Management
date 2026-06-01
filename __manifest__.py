@@ -5,7 +5,7 @@
     'description': """CLinic Management Addon""",
     'author': "Mazen Khairy",
     'version': '0.1',
-    'depends': ['base', 'product', 'mail'],
+    'depends': ['base', 'product', 'mail', 'web'],
     'category': 'Hospital',
     'data': [
         'security/clinic_security.xml',
@@ -24,5 +24,11 @@
     'demo': [
         'demo/demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'clinic_management/static/src/components/clinic_dashboard/clinic_dashboard.js',
+            'clinic_management/static/src/components/clinic_dashboard/clinic_dashboard.xml',
+        ],
+    },
     'installable': True,
 }

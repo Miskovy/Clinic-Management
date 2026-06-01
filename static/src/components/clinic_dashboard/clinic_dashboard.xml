@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="clinic_management.ClinicDashboard" owl="1">
+        <div class="o_clinic_dashboard p-4">
+            <div class="d-flex align-items-center justify-content-between">
+                <h1 t-esc="state.title"/>
+                <button class="btn btn-primary" type="button" t-on-click="loadDashboardData">
+                    Refresh
+                </button>
+            </div>
+
+            <div t-if="state.isLoading" class="alert alert-info mt-4">
+                Loading dashboard data...
+            </div>
+
+            <div t-if="state.error" class="alert alert-danger mt-4" t-esc="state.error"/>
+
+            <div class="row mt-4">
+                <div class="col-12 col-md-6 col-xl mb-3">
+                    <div class="card p-3">
+                        <span class="text-muted">Total Patients</span>
+                        <strong class="fs-2" t-esc="state.patientCount"/>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl mb-3">
+                    <div class="card p-3">
+                        <span class="text-muted">Total Appointments</span>
+                        <strong class="fs-2" t-esc="state.totalAppointments"/>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl mb-3">
+                    <div class="card p-3">
+                        <span class="text-muted">Confirmed</span>
+                        <strong class="fs-2" t-esc="state.confirmedAppointments"/>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl mb-3">
+                    <div class="card p-3">
+                        <span class="text-muted">Done</span>
+                        <strong class="fs-2" t-esc="state.doneAppointments"/>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl mb-3">
+                    <div class="card p-3">
+                        <span class="text-muted">Cancelled</span>
+                        <strong class="fs-2" t-esc="state.cancelledAppointments"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Recent Appointments</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Date</th>
+                                <th>State</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-if="!state.recentAppointments.length">
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No recent appointments found.
+                                </td>
+                            </tr>
+                            <tr t-foreach="state.recentAppointments" t-as="appointment" t-key="appointment.id">
+                                <td t-esc="appointment.patient_id ? appointment.patient_id[1] : '-'"/>
+                                <td t-esc="appointment.doctor_id ? appointment.doctor_id[1] : '-'"/>
+                                <td t-esc="appointment.appointment_date || '-'"/>
+                                <td>
+                                    <span class="badge text-bg-secondary" t-esc="appointment.state"/>
+                                </td>
+                                <td class="text-end">
+                                    <button
+                                        t-if="appointment.state === 'draft'"
+                                        class="btn btn-sm btn-primary"
+                                        type="button"
+                                        t-att-disabled="state.confirmingAppointmentId === appointment.id"
+                                        t-on-click="() => this.confirmAppointment(appointment.id)"
+                                    >
+                                        Confirm
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
