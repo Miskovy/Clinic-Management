@@ -3,10 +3,15 @@
     <t t-name="clinic_management.ClinicDashboard" owl="1">
         <div class="o_clinic_dashboard p-4">
             <div class="d-flex align-items-center justify-content-between">
-                <h1 t-esc="state.title"/>
-                <button class="btn btn-primary" type="button" t-on-click="loadDashboardData">
-                    Refresh
-                </button>
+                <h1 t-esc="state.title" class="mb-0"/>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" type="button" t-on-click="loadDashboardData">
+                        Refresh
+                    </button>
+                    <button class="btn btn-primary" type="button" t-on-click="openAppointmentModal">
+                        New Appointment
+                    </button>
+                </div>
             </div>
 
             <div t-if="state.isLoading" class="alert alert-info mt-4">
@@ -92,6 +97,7 @@
                     </table>
                 </div>
             </div>
+            <AppointmentModal t-if="state.isModalOpen" onClose="() => this.closeAppointmentModal()" onAppointmentCreated="() => this.loadDashboardData()"/>
         </div>
     </t>
 </templates>

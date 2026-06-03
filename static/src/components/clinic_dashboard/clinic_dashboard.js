@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onMounted, useState } from "@odoo/owl";
+import { AppointmentModal } from "./appointment_modal";
 
 export class ClinicDashboard extends Component {
     setup() {
@@ -18,11 +19,20 @@ export class ClinicDashboard extends Component {
             cancelledAppointments: 0,
             recentAppointments: [],
             confirmingAppointmentId: null,
+            isModalOpen: false,
         });
 
         onMounted(() => {
             this.loadDashboardData();
         });
+    }
+
+    openAppointmentModal() {
+        this.state.isModalOpen = true;
+    }
+
+    closeAppointmentModal() {
+        this.state.isModalOpen = false;
     }
 
     async loadDashboardData() {
@@ -81,6 +91,7 @@ export class ClinicDashboard extends Component {
     }
 }
 
+ClinicDashboard.components = { AppointmentModal };
 ClinicDashboard.template = "clinic_management.ClinicDashboard";
 
 registry.category("actions").add("clinic_dashboard", ClinicDashboard);

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="clinic_management.AppointmentModal" owl="1">
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content shadow-lg border-0 rounded-3 bg-white">
+                    <!-- Modal Header -->
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold text-dark fs-5">New Appointment</h5>
+                        <button type="button" class="btn-close" t-on-click="props.onClose" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body Form -->
+                    <form t-on-submit="onSubmit">
+                        <div class="modal-body py-3">
+                            <!-- Patient Dropdown -->
+                            <div class="mb-3">
+                                <label for="patient" class="form-label fw-semibold text-muted small mb-1">Patient</label>
+                                <select id="patient" class="form-select text-dark" t-model="state.patientId">
+                                    <option value="">Select Patient...</option>
+                                    <t t-foreach="state.patients" t-as="patient" t-key="patient.id">
+                                        <option t-att-value="patient.id" t-esc="patient.name"/>
+                                    </t>
+                                </select>
+                                <div t-if="state.errors.patient" class="text-danger small mt-1" t-esc="state.errors.patient"/>
+                            </div>
+
+                            <!-- Doctor Dropdown -->
+                            <div class="mb-3">
+                                <label for="doctor" class="form-label fw-semibold text-muted small mb-1">Doctor</label>
+                                <select id="doctor" class="form-select text-dark" t-model="state.doctorId">
+                                    <option value="">Select Doctor...</option>
+                                    <t t-foreach="state.doctors" t-as="doctor" t-key="doctor.id">
+                                        <option t-att-value="doctor.id" t-esc="doctor.name"/>
+                                    </t>
+                                </select>
+                                <div t-if="state.errors.doctor" class="text-danger small mt-1" t-esc="state.errors.doctor"/>
+                            </div>
+
+                            <!-- Appointment Date -->
+                            <div class="mb-3">
+                                <label for="appointment_date" class="form-label fw-semibold text-muted small mb-1">Appointment Date</label>
+                                <input type="date" id="appointment_date" class="form-control text-dark" t-model="state.appointmentDate"/>
+                                <div t-if="state.errors.date" class="text-danger small mt-1" t-esc="state.errors.date"/>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="mb-3">
+                                <label for="reason" class="form-label fw-semibold text-muted small mb-1">Reason for Visit</label>
+                                <textarea id="reason" class="form-control text-dark" rows="3" placeholder="Describe reason..." t-model="state.reason"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-light shadow-sm text-secondary" t-on-click="props.onClose">Cancel</button>
+                            <button type="submit" class="btn btn-primary shadow-sm" t-att-disabled="state.isSubmitting">
+                                <t t-if="state.isSubmitting">Saving...</t>
+                                <t t-else="">Save Appointment</t>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
