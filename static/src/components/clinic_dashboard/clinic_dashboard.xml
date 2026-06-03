@@ -4,7 +4,50 @@
         <div class="o_clinic_dashboard p-4">
             <div class="d-flex align-items-center justify-content-between">
                 <h1 t-esc="state.title" class="mb-0"/>
-                <div class="d-flex gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Notification Bell Dropdown -->
+                    <div class="position-relative">
+                        <button class="btn btn-link text-dark position-relative p-2" type="button" t-on-click="toggleNotificationsDropdown">
+                            <i class="fa fa-bell fs-4"/>
+                            <span t-if="state.unreadCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                <t t-esc="state.unreadCount"/>
+                            </span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div t-if="state.showNotificationsDropdown" class="position-absolute end-0 mt-2 bg-white border rounded shadow-lg p-0" style="width: 320px; z-index: 1050;">
+                            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                                <span class="fw-bold text-dark">Upcoming Appointments</span>
+                                <button t-if="state.unreadCount > 0" class="btn btn-link btn-sm p-0 text-primary fw-semibold text-decoration-none" type="button" t-on-click="markAllRead">
+                                    Mark All Read
+                                </button>
+                            </div>
+                            <div class="overflow-auto" style="max-height: 250px;">
+                                <t t-if="state.notifications.length === 0">
+                                    <div class="text-center text-muted p-4 small">
+                                        No upcoming appointments in the next 2 hours.
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="list-group list-group-flush">
+                                        <t t-foreach="state.notifications" t-as="noti" t-key="noti.id">
+                                            <div class="list-group-item p-3 list-group-item-action border-0 border-bottom text-dark">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <span class="small fw-bold text-dark" t-esc="noti.name"/>
+                                                    <span class="badge rounded-pill bg-info text-dark small" style="font-size: 0.7rem;" t-esc="noti.remainingStr"/>
+                                                </div>
+                                                <div class="small text-muted mt-1">
+                                                    <div><strong>Patient:</strong> <span t-esc="noti.patient_id ? noti.patient_id[1] : '-'"/></div>
+                                                    <div><strong>Doctor:</strong> <span t-esc="noti.doctor_id ? noti.doctor_id[1] : '-'"/></div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
                     <button class="btn btn-primary" type="button" t-on-click="loadDashboardData">
                         Refresh
                     </button>

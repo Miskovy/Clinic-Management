@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { AppointmentModal } from "./appointment_modal";
 
 export class ClinicDashboard extends Component {
@@ -20,10 +20,24 @@ export class ClinicDashboard extends Component {
             recentAppointments: [],
             confirmingAppointmentId: null,
             isModalOpen: false,
+            notifications: [],
+            unreadCount: 0,
+            showNotificationsDropdown: false,
+            readNotificationIds: {},
         });
 
         onMounted(() => {
             this.loadDashboardData();
+            this.loadNotifications();
+            this.notificationInterval = setInterval(() => {
+                this.loadNotifications();
+            }, 60000);
+        });
+
+        onWillUnmount(() => {
+            if (this.notificationInterval) {
+                clearInterval(this.notificationInterval);
+            }
         });
     }
 
@@ -88,6 +102,57 @@ export class ClinicDashboard extends Component {
         } finally {
             this.state.confirmingAppointmentId = null;
         }
+    }
+
+    async loadNotifications() {
+        const now = new Date();
+        const twoHoursLater = new Date(Date.now() + 2 * 60 * 60 * 1000);
+        
+        const pad = (num) => String(num).padStart(2, '0');
+        const formatUtc = (date) => `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
+        
+        const nowStr = formatUtc(now);
+        const twoHoursLaterStr = formatUtc(twoHoursLater);
+
+        try {
+            const appointments = await this.orm.searchRead(
+                "clinic.appointment",
+                [
+                    ["state", "=", "confirmed"],
+                    ["appointment_date", ">=", nowStr],
+                    ["appointment_date", "<=", twoHoursLaterStr],
+                ],
+                ["name", "patient_id", "doctor_id", "appointment_date"]
+            );
+
+            const updatedNotifications = appointments.map(appt => {
+                const apptDate = new Date(appt.appointment_date + "Z");
+                const diffMs = apptDate.getTime() - Date.now();
+                const diffMins = Math.max(0, Math.floor(diffMs / (60 * 1000)));
+                const remainingStr = diffMins > 0 ? `${diffMins} min remaining` : "starting now";
+                return {
+                    ...appt,
+                    remainingStr,
+                };
+            });
+
+            this.state.notifications = updatedNotifications;
+            const unread = updatedNotifications.filter(n => !this.state.readNotificationIds[n.id]);
+            this.state.unreadCount = unread.length;
+        } catch (error) {
+            console.error("Failed to load notifications:", error);
+        }
+    }
+
+    toggleNotificationsDropdown() {
+        this.state.showNotificationsDropdown = !this.state.showNotificationsDropdown;
+    }
+
+    markAllRead() {
+        for (const n of this.state.notifications) {
+            this.state.readNotificationIds[n.id] = true;
+        }
+        this.state.unreadCount = 0;
     }
 }
 
