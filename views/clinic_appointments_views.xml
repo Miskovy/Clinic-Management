@@ -200,4 +200,15 @@
 
 <menuitem id="menu_clinic_appointments" name="Appointments" parent="menu_clinic_root" action="action_clinic_appointments" sequence="20"/>
 
+    <record id="action_clinic_kanban" model="ir.actions.client">
+        <field name="name">Kanban Board</field>
+        <field name="tag">clinic_kanban</field>
+    </record>
+
+    <menuitem id="menu_clinic_kanban"
+              name="Kanban Board"
+              parent="menu_clinic_root"
+              action="action_clinic_kanban"
+              sequence="30"/>
+
 </odoo>

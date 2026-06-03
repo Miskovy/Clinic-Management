@@ -28,6 +28,8 @@
         'web.assets_backend': [
             'clinic_management/static/src/components/clinic_dashboard/clinic_dashboard.js',
             'clinic_management/static/src/components/clinic_dashboard/clinic_dashboard.xml',
+            'clinic_management/static/src/components/clinic_kanban/clinic_kanban.js',
+            'clinic_management/static/src/components/clinic_kanban/clinic_kanban.xml',
         ],
     },
     'installable': True,
